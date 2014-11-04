@@ -10,6 +10,7 @@ temp(3).rb = zeros(3,length(x));
 temp(4).rb = zeros(3,length(x));
 temp(length(orbit_X)).rb = zeros(3,length(x));
 
+%% Position
 
 for it = 1:(length(orbit_X))
     temp(it).rb (1,:) = x (it,:);
@@ -25,7 +26,7 @@ r_3D(5).r_vec = zeros(3,length(x) );
 
 for it = 1:length (orbit_X)
     for k = 1: length (x)
-        r_3D(it).r_vec(:,k) = (R3 (-orbit_X(it).bo) * (R1 (-orbit_X(it).i) * (R3 (-orbit_X(it).so) * temp(it).rb(:,k)) ));
+        r_3D(it).r_vec(:,k) = (R3 (-orbit_X(it).bo) * (R1 (-orbit_X(it).i) * (R3 (-orbit_X(it).so) * temp(it).rb(:,k)) ) );
     end
 end
 
