@@ -9,6 +9,7 @@ GEO = 4;
 MICHIBIKI = 5;
 
 deg2rad = @(x) (x/180)*pi;
+rad2deg = @(x) (x*180)/pi;
 GM = 398.6005*(10^12);
 
 orbit(GOCE).a = 6629E3;
@@ -135,18 +136,20 @@ hold off;
 
 %% From space-fixed system to earth-fixed system
 
-[ r_3D_ef ] = cart2efix ( r_3D, th0); % Position
+[ r_3D_ef, lat, long ] = cart2efix ( r_3D, th0); % Position
 [ r_3D_ef_dt ] = cart2efix ( r_3D_dt, th0); % Velocity
 
-figure(124123);
-hold off;
-axis equal;
+
 GOCE_2_rev_time = round(orbit(GOCE).T)*2;
 GPS_2_rev_time = round(orbit(GPS).T)*2;
 MOLNIYA_2_rev_time = round(orbit(MOLNIYA).T)*2;
 GEO_2_rev_time = round(orbit(GEO).T)*2;
 MICHIBIKI_2_rev_time = round(orbit(MICHIBIKI).T)*2;
 
+%% Draw Orbit of 5 Satellites in 3-D space (Earth-fixed System)
+figure(124123);
+hold off;
+axis equal;
 plot3(r_3D_ef(GOCE).r_vec(1,1:GOCE_2_rev_time), r_3D_ef(GOCE).r_vec(2,1:GOCE_2_rev_time), r_3D_ef(GOCE).r_vec(3,1:GOCE_2_rev_time),...
     r_3D_ef(GPS).r_vec(1,1:GPS_2_rev_time), r_3D_ef(GPS).r_vec(2,1:GPS_2_rev_time), r_3D_ef(GPS).r_vec(3,1:GPS_2_rev_time),...
     r_3D_ef(MOLNIYA).r_vec(1,1:MOLNIYA_2_rev_time), r_3D_ef(MOLNIYA).r_vec(2,1:MOLNIYA_2_rev_time), r_3D_ef(MOLNIYA).r_vec(3,1:MOLNIYA_2_rev_time),...
@@ -158,3 +161,16 @@ title('Orbit of 5 Satellites in 3-D space (Earth-fixed System)');
 xlabel('x(m)');
 ylabel('y(m)');
 zlabel('z(m)');
+hold off;
+%% Draw satellite ground-tracks on the Earth surface
+figure (244000)
+Earth_coast (2);
+hold all;
+ts = 60;
+plot (lat(GOCE).r_vec(1:ts:GOCE_2_rev_time), long(GOCE).r_vec(1:ts:GOCE_2_rev_time), '*',...
+    lat(GPS).r_vec(1:ts:GPS_2_rev_time), long(GPS).r_vec(1:ts:GPS_2_rev_time), '*',...
+    lat(MOLNIYA).r_vec(1:ts:MOLNIYA_2_rev_time), long(MOLNIYA).r_vec(1:ts:MOLNIYA_2_rev_time), '*',...
+    lat(GEO).r_vec(1:ts:GEO_2_rev_time), long(GEO).r_vec(1:ts:GEO_2_rev_time), '*',...
+    lat(MICHIBIKI).r_vec(1:ts:MICHIBIKI_2_rev_time), long(MICHIBIKI).r_vec(1:ts:MICHIBIKI_2_rev_time), '*');
+legend('EARTH','GOCE', 'GPS', 'MOLNIYA', 'GEO','MICHIBIKI', 'location','NorthEastOutside');
+%%
