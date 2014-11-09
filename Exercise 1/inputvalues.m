@@ -173,4 +173,28 @@ plot (lat(GOCE).r_vec(1:ts:GOCE_2_rev_time), long(GOCE).r_vec(1:ts:GOCE_2_rev_ti
     lat(GEO).r_vec(1:ts:GEO_2_rev_time), long(GEO).r_vec(1:ts:GEO_2_rev_time), '*',...
     lat(MICHIBIKI).r_vec(1:ts:MICHIBIKI_2_rev_time), long(MICHIBIKI).r_vec(1:ts:MICHIBIKI_2_rev_time), '*');
 legend('EARTH','GOCE', 'GPS', 'MOLNIYA', 'GEO','MICHIBIKI', 'location','NorthEastOutside');
+% %% Plot trajectory of the satellites as seen by Wettzell
+% rw = [4075.53022E3, 931.78130E3, 4801.61819E3]';
+% REP = 6356.89E3;
+% RE = 6371E3;
+% [azim,elev] = efix2topo(r_3D_ef, rw, RE, REP);
+% figure (3500000);
+% hold all;
+% skyplot (rad2deg(azim(GOCE,1:round(orbit(GOCE).T))),rad2deg(elev(GOCE,1:round(orbit(GOCE).T))));
+% skyplot (rad2deg(azim(GPS,1:round(orbit(GPS).T))),rad2deg(elev(GPS,1:round(orbit(GPS).T))));
+% skyplot (rad2deg(azim(MOLNIYA,1:round(orbit(MOLNIYA).T))),rad2deg(elev(MOLNIYA,1:round(orbit(MOLNIYA).T))));
+% skyplot (rad2deg(azim(GEO,1:round(orbit(GEO).T))),rad2deg(elev(GEO,1:round(orbit(GEO).T))));
+% skyplot (rad2deg(azim(MICHIBIKI,1:round(orbit(MICHIBIKI).T))),rad2deg(elev(MICHIBIKI,1:round(orbit(MICHIBIKI).T))));
+% legend('GOCE', 'GPS', 'MOLNIYA', 'GEO','MICHIBIKI');
+% title('Orbit in the Topocentric coordinate system');
+
 %%
+rw = [4075.53022E3, 931.78130E3, 4801.61819E3]';
+wlong = atan2 (rw(2),rw(3));
+wlat = atan2 (rw(3), sqrt(rw(1)^2+rw(2)^2));
+for it = 1:60:orbit(MICHIBIKI).T;
+    [ A(it), E(it) ] = efix2topo2(r_3D_ef(MICHIBIKI).r_vec(1:3,it), wlong, wlat);
+end
+skyplot(rad2deg(A),rad2deg(E));
+
+
